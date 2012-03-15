@@ -1,5 +1,6 @@
 require 'net/http'
 require 'open-uri'
+require 'crack'
 module Tianyi
   class Request
     attr_accessor :metd_name
@@ -27,7 +28,10 @@ module Tianyi
 
     def model_classes
       [
-       Tianyi::GetGrowthRulesInfo
+       Tianyi::UserActivation,
+       Tianyi::UserGetGrowthRulesInfo,
+       Tianyi::UserLogin,
+       Tianyi::UserRegister
       ]
     end
 
@@ -51,7 +55,7 @@ module Tianyi
 
     
     def errors_format(response)
-    	response['errors']
+    	response['msg']
     end
 
 
@@ -63,11 +67,21 @@ module Tianyi
     def to_classdata(name,data)
     	if k = paramsname_to_class(name)
 	    	data_arr = []
-	      data["results"].map{|x| 
-	        ginfo = k.to_s.split('::').reduce(Object){|cls, c| cls.const_get(c) }.new
-	      	Tianyi::GetGrowthRulesInfo.attr_names.map{|a| ginfo.send("#{a}=",x["#{a}"])}
-	      	data_arr << ginfo
-	      }
+        
+        tmp_class = k.to_s.split('::').reduce(Object){|cls, c| cls.const_get(c) }
+        results = data["results"]
+        if results.kind_of?(Array)
+  	      results.map{|x| 
+  	        ginfo = tmp_class.new
+  	      	tmp_class.attr_names.map{|a| ginfo.send("#{a}=",x["#{a}"].to_s);}
+  	      	data_arr << ginfo
+  	      }
+        else #doto改写
+          x = results
+          ginfo = tmp_class.new
+          tmp_class.attr_names.map{|a| ginfo.send("#{a}=",x["#{a}"].to_s);}
+          data_arr = ginfo
+        end
 	      return data_arr
     	else
     		return data

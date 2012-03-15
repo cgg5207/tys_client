@@ -25,5 +25,9 @@ end
 
 require "tianyi/errors"
 require "tianyi/request"
-require "tianyi/models/get_growth_rules_info"
+
+require "tianyi/models/user_activation"
+require "tianyi/models/user_get_growth_rules_info"
+require "tianyi/models/user_login"
+require "tianyi/models/user_register"
 

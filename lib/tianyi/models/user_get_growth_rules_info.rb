@@ -1,5 +1,5 @@
 module Tianyi
-  class GetGrowthRulesInfo
+  class UserGetGrowthRulesInfo
 
     def self.metd_name
       "user.getGrowthRulesInfo"
