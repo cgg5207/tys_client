@@ -1,13 +1,21 @@
 Tianyi
 ======
+Tianyi  api
 
-Introduction goes here.
+
+Install 
+=======
+
+ruby script/plugin install git@github.com:cgg5207/tys_client.git
+
 
 
 Example
 =======
 
-Example goes here.
+Tianyi::Request.new('user.register',{'userName'=>'cgg123','userPass'=>'11111111','userNickName'=>'cgg123'}).invoke
+Tianyi::Request.new('user.Activation',{'userId'=>'14','ValidateCode'=>'5949'}).invoke
+Tianyi::Request.new('user.login',{'userName'=>'cgg72','userPass'=>'11111111'}).invoke
+Tianyi::Request.new('user.getGrowthRulesInfo').invoke
 
 
-Copyright (c) 2012 [name of plugin creator], released under the MIT license
