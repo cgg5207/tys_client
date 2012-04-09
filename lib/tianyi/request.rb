@@ -16,7 +16,7 @@ module Tianyi
       }
 
       @params.merge!(options)
-      str = ENV['TIANYI_SERVER_URL'] + (@params.sort.collect { |c| "#{c[0]}#{c[1]}" }).join("")
+      str = (@params.sort.collect { |c| "#{c[0]}#{c[1]}" }).join("")
       @params["sign"] = Digest::SHA1::hexdigest(str)
     end
 
