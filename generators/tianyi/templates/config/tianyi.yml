@@ -1,21 +1,24 @@
 default: &default
   format: json
-  version: v1.0
+  version: 1.0
 
 
 development:
   app_key: 10000000
+  app_secret: 10000000
   server_url: http://127.0.0.1:3003/api
   <<: *default
 
 
 production:
-  app_key: 10000000
+  app_key: 10000000  
+  app_secret: 10000000
   server_url: http://172.18.19.11:3003/api
   <<: *default
 
 
 test:
   app_key: 10000000
+  app_secret: 10000000
   server_url: http://172.18.19.11:3003/api
   <<: *default
