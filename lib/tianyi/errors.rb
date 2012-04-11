@@ -1,5 +1,23 @@
+require 'fastercsv'
 module Tianyi
   module Errors
+     class Exceptions < RuntimeError
+	    def initialize(response)
+	      @response_code = response['code']
+	      @error_message = fetch_error_message
+	    end
+
+	    def fetch_error_message
+	  	  csv_path = "#{RAILS_ROOT}/vendor/plugins/tys_client/lib/exceptions.csv"
+	  	  @error_message = "未知错误"
+		  FasterCSV.foreach(csv_path, :headers => false) { |row|  @error_message=row[2] if row[0].to_i == @response_code.to_i }
+		  return @error_message
+	    end
+
+	    def to_s
+	      @error_message
+	    end	    
+     end
 
   	 class RepeatedText  < RuntimeError
 	    def initialize(what = "entity")

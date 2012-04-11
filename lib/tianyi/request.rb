@@ -56,7 +56,14 @@ module Tianyi
 	    Crack::JSON.parse(response.body)
 	  end
 
-    
+
+    def exceptions_format(response)
+      if !response['msg'].nil? and !response['code'].nil?
+        raise Tianyi::Errors::Exceptions.new(response)
+      end 
+    end
+
+
     def errors_format(response)
     	response['msg']
     end
@@ -98,7 +105,8 @@ module Tianyi
 
     def raise_errors(response)
       case response.code.to_i
-        
+        when 200..201
+          exceptions_format(parse(response))
         when 400
           data = errors_format(parse(response))
           raise Tianyi::Errors::RepeatedText.new(data), "(#{response.code}): #{response.message} - #{data['error']}"
