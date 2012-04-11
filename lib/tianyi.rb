@@ -15,9 +15,10 @@ module Tianyi
 
     def apply_configuration(config)
       ENV['TIANYI_APP_KEY']      = config['app_key'].to_s
+      ENV['TIANYI_APP_SECRET']   = config['app_secret'].to_s
       ENV['TIANYI_FORMAT']       = config['format'].to_s
       ENV['TIANYI_VERSION']      = config['version'].to_s
-      ENV['TIANYI_SERVER_URL']  = config['server_url'].to_s
+      ENV['TIANYI_SERVER_URL']   = config['server_url'].to_s
     end
   end
 
