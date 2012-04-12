@@ -4,8 +4,9 @@ require 'crack'
 module Tianyi
   class Request
     attr_accessor :metd_name
-    def initialize(method, options={})
+    def initialize(method, options={},header={})
       options = options.clone
+      @header_options = header.clone
       @metd_name = method
       @params = {
         'method' => method,
@@ -14,6 +15,7 @@ module Tianyi
         'v'      => ENV['TIANYI_VERSION'],
         'timestamp'=> Time.now.strftime("%Y-%m-%d %H:%M:%S")
       }
+
       @params.merge!(options)
       str = escape((@params.sort.collect { |c| "#{c[0]}#{c[1]}" }).join(""))
       @params["sig"] = Digest::SHA1::hexdigest(str+ENV['TIANYI_APP_SECRET'])
@@ -38,13 +40,32 @@ module Tianyi
   private
     def post_form
       #puts ENV['TIANYI_SERVER_URL']+"?"+(@params.sort.collect { |c| "#{c[0]}=#{c[1]}" }).join("&")
-      #Tianyi.logger = Logger.new(STDERR)
       Tianyi::Logging.skip_api_logging=false
       Logging.filter_ty_parameter_logging :fields => [:userPass,:userNewPwd,:userOldPwd,:userConfirmPwd]
+
+
+
+      # Logging.log_ty_api(@metd_name, @params) do
+      #   res = Net::HTTP.post_form(URI.parse(ENV['TIANYI_SERVER_URL']), @params)
+      # end
+
+
       Logging.log_ty_api(@metd_name, @params) do
-        res = Net::HTTP.post_form(URI.parse(ENV['TIANYI_SERVER_URL']), @params)
+        url        = URI.parse(ENV['TIANYI_SERVER_URL'])
+        params_url = to_params(@params)
+        #puts params_url
+        headers    = @header_options
+        #puts headers
+        http       = Net::HTTP.new(url.host, url.port)
+        response   = http.post(url.path,params_url,headers)
       end
+
     end
+
+    def to_params(params)
+      string = params.sort().collect{|key,value| "#{key}=#{value}"}.join("&")
+      return string
+    end    
 
     def escape(value)
       CGI.escape(value.to_s)#.gsub("%7E", '~').gsub("+", "%20")
