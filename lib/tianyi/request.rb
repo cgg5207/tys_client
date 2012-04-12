@@ -38,7 +38,12 @@ module Tianyi
   private
     def post_form
       #puts ENV['TIANYI_SERVER_URL']+"?"+(@params.sort.collect { |c| "#{c[0]}=#{c[1]}" }).join("&")
-      res = Net::HTTP.post_form(URI.parse(ENV['TIANYI_SERVER_URL']), @params)
+      #Tianyi.logger = Logger.new(STDERR)
+      Tianyi::Logging.skip_api_logging=false
+      Logging.filter_ty_parameter_logging :fields => [:userPass,:userNewPwd,:userOldPwd,:userConfirmPwd]
+      Logging.log_ty_api(@metd_name, @params) do
+        res = Net::HTTP.post_form(URI.parse(ENV['TIANYI_SERVER_URL']), @params)
+      end
     end
 
     def escape(value)

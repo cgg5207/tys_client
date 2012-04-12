@@ -3,6 +3,7 @@ module Tianyi
   module Errors
      class Exceptions < RuntimeError
 	    def initialize(response)
+	      @response_info = response
 	      @response_code = response['code']
 	      @error_message = fetch_error_message
 	    end
@@ -11,6 +12,12 @@ module Tianyi
 	  	  csv_path = "#{RAILS_ROOT}/vendor/plugins/tys_client/lib/exceptions.csv"
 	  	  @error_message = "未知错误"
 		  FasterCSV.foreach(csv_path, :headers => false) { |row|  @error_message=row[2] if row[0].to_i == @response_code.to_i }
+
+		  if @error_message == "未知错误"
+		  	puts @response_info.to_json
+		  	Tianyi.logger.info("Exception Response: #{@response_info.to_json}")
+		  end
+
 		  return @error_message
 	    end
 
