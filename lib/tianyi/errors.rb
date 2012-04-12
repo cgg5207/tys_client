@@ -13,7 +13,7 @@ module Tianyi
 	  	  @error_message = "未知错误"
 		  FasterCSV.foreach(csv_path, :headers => false) { |row|  @error_message=row[2] if row[0].to_i == @response_code.to_i }
 
-		  if @error_message == "未知错误"
+		  if @error_message == "未知错误" or @response_code.to_i < 1000000
 		  	puts @response_info.to_json
 		  	Tianyi.logger.info("Exception Response: #{@response_info.to_json}")
 		  end
