@@ -32,7 +32,10 @@ module Tianyi
        Tianyi::UserActivation,
        Tianyi::UserGetGrowthRulesInfo,
        Tianyi::UserLogin,
-       Tianyi::UserRegister
+       Tianyi::UserRegister,
+       Tianyi::AppGetInfo,
+       Tianyi::AppAttachList,
+       Tianyi::TradeDownApp
       ]
     end
 
@@ -113,6 +116,12 @@ module Tianyi
     	      	tmp_class.attr_names.map{|a| ginfo.send("#{a}=",x["#{a}"].to_s);}
     	      	data_arr << ginfo
     	      }
+          elsif results and results['item'] #doto改写
+            results['item'].map{|x| 
+              ginfo = tmp_class.new
+              tmp_class.attr_names.map{|a| ginfo.send("#{a}=",x["#{a}"].to_s);}
+              data_arr << ginfo
+            }
           else #doto改写
             x = results
             ginfo = tmp_class.new
