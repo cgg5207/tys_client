@@ -33,6 +33,7 @@ module Tianyi
        Tianyi::UserGetGrowthRulesInfo,
        Tianyi::UserLogin,
        Tianyi::UserRegister,
+       Tianyi::UserGetInfo,
        Tianyi::AppGetInfo,
        Tianyi::AppAttachList,
        Tianyi::TradeDownApp
